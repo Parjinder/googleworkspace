@@ -7,14 +7,110 @@ const style = () => css`
     background-color: #fff;
     overflow: auto;
   }
+  .labelSpanStyles {
+    margin-bottom: 2%;
+    width: 31%;
+    float: left;
+    margin-right: 2%;
+  }
+  .labelSpanStyles label {
+    width: 100%;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 0px;
+    color: #333;
+  }
+  .labelSpanStyles span {
+    display: flex;
+   
+  }
+  .labelSpanStylesTemp {
+    margin-bottom: 1%;
+    width: 31%;
+    float: left;
+    margin-right: 2%;
+  }
+  .labelSpanStylesTemp label {
+    width: 100%;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 0px;
+    color: #333;
+  }
+  .labelSpanStylesTemp a {
+    color: #333;
+    text-decoration: none;
+  }
+  .labelSpanStyles a {
+    color: #333;
+    text-decoration: none;
+  }
+  
+  .labelSpanStylesTemp span a {
+    color: #333 !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+  }
+  .empDetailIcon {
+    padding: 0px 15px;
+    color: "[theme:themePrimary]";
+    text-decoration: none;
+    font-size: 20px;
+    cursor: pointer;
+  }
   .custom-row {
     height: 100vh;
     align-items: center;
     justify-content: center;
     background-color: #dfdfdf;
   }
+  .labelSpanStylesTemp label {
+    width: 100%;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 0px;
+    color: #333;
+  }
+  .empMoreDetailsBlock {
+    flex-wrap: wrap;
+    margin-top: 1%;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+  }
   .edp .tileView .makeCenterStyles {
     width: 65%;
+  }
+  .personallabelSpanStyles {
+    margin-top: 1%;
+   //padding-bottom: 8px;
+    color: #333;
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+  }
+  .personallabelSpanStyles span {
+    max-width: 84%;
+  }
+  .personallabelSpanStyles span {
+    max-width: 75%;
+  }
+  .LeftalignPc{
+    display: flex;
+    width: fit-content;
+  }
+  .personallabelSpanStyles span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    max-width: 100%;
+    
+  }
+  .personallabelSpanStyles label {
+    // width: auto;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 0px;
   }
   .searchFiltersDiv {
     float: left;
@@ -68,6 +164,14 @@ const style = () => css`
     // margin-right: 2%;
     max-width: 110px;
   }
+  .empDetailIconView {
+    width: 100%;
+    padding-bottom: 1%;
+    gap: 5px;
+    border-bottom: 1px solid #ddd;
+    position: relative;
+    display:flex;
+  }
   .empTitle {
     font-size: 16px;
     font-weight: 500;
@@ -108,6 +212,13 @@ const style = () => css`
     background-color: #f4f4f4;
    
   }
+  
+.clpbrdspan {
+  display: "flex";
+  gap: 18px;
+  align-items: "center";
+  cursor: pointer;
+}
   .edp .searchFiltersDiv {
     float: left;
     flex-grow: 2;

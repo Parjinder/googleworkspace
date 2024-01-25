@@ -236,6 +236,9 @@ const SelectSource = (props) => {
     gapi.client.load("admin", "directory_v1", () => {});
     getAllUsersInOrg().then((data) => {
       console.log(data);
+      var mappedfields =
+      '[{"ExistingList":"About Me","ExternalList":"About_Me"},{"ExistingList":"School","ExternalList":"CF1"},{"ExistingList":"Date of Birth","ExternalList":"DOB"},{"ExistingList":"Date of Join","ExternalList":"DOJ"},{"ExistingList":"Skills","ExternalList":"Skills"},{"ExistingList":"Projects","ExternalList":"Projects"},{"ExistingList":"Hobbies","ExternalList":"Hobbies"}]';
+   
       if (typeof data[0] === "undefined") {
         setUserArray([]);
       } else {
@@ -303,6 +306,7 @@ const SelectSource = (props) => {
             image: user.hasOwnProperty("thumbnailPhotoUrl")
               ? user.thumbnailPhotoUrl
               : DefaultImage,
+              mappedfields:mappedfields
           };
         });
         //console.log(staffMember);
@@ -445,6 +449,9 @@ const SelectSource = (props) => {
     gapi.client.load("admin", "directory_v1", () => {});
     getAllUsersInOrg1(value, mode).then((data) => {
       console.log(data);
+      var mappedfields =
+      '[{"ExistingList":"About Me","ExternalList":"About_Me"},{"ExistingList":"School","ExternalList":"CF1"},{"ExistingList":"Date of Birth","ExternalList":"DOB"},{"ExistingList":"Date of Join","ExternalList":"DOJ"},{"ExistingList":"Skills","ExternalList":"Skills"},{"ExistingList":"Projects","ExternalList":"Projects"},{"ExistingList":"Hobbies","ExternalList":"Hobbies"}]';
+   
       if (typeof data[0] === "undefined") {
         setUserArray([]);
       } else {
@@ -512,6 +519,7 @@ const SelectSource = (props) => {
             image: user.hasOwnProperty("thumbnailPhotoUrl")
               ? user.thumbnailPhotoUrl
               : DefaultImage,
+              mappedfields:mappedfields
           };
         });
         console.log(staffMember);

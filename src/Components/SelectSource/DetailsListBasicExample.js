@@ -135,7 +135,39 @@ const DetailsListBasicExample = (props) => {
       isRowHeader: true,
       isPadded: true,
     });
-  
+    var mappedcustomcol = JSON.parse(props.employees[0].mappedfields);
+
+     
+    var project =
+      mappedcustomcol.length > 0
+        ? mappedcustomcol.filter(
+            (item) => item.ExistingList == "Projects"
+          )[0].ExternalList
+        : "Projects";
+    var skill =
+      mappedcustomcol.length > 0
+        ? mappedcustomcol.filter(
+            (item) => item.ExistingList == "Skills"
+          )[0].ExternalList
+        : "Skills";
+    var hobbies =
+      mappedcustomcol.length > 0
+        ? mappedcustomcol.filter(
+            (item) => item.ExistingList == "Hobbies"
+          )[0].ExternalList
+        : "Hobbies";
+    var dob =
+      mappedcustomcol.length > 0
+        ? mappedcustomcol.filter(
+            (item) => item.ExistingList == "Date of Birth"
+          )[0].ExternalList
+        : "Date of Birth";
+    var doj =
+      mappedcustomcol.length > 0
+        ? mappedcustomcol.filter(
+            (item) => item.ExistingList == "Date of Join"
+          )[0].ExternalList
+        : "Date of Join";
     if (props.employees.length > 0) {
       _columns.push({
         key: "1",
@@ -219,6 +251,61 @@ const DetailsListBasicExample = (props) => {
         isRowHeader: true,
         isPadded: true,
       });
+
+      _columns.push({
+        key: "7",
+        name:"Date of Birth",
+        fieldName: dob,
+        minWidth: 150,
+        maxWidth: 200,
+        isResizable: true,
+        isRowHeader: true,
+        isPadded: true,
+      });
+
+      _columns.push({
+        key: "8",
+        name:"Date of Join",
+        fieldName: doj,
+        minWidth: 150,
+        maxWidth: 200,
+        isResizable: true,
+        isRowHeader: true,
+        isPadded: true,
+      });
+
+      _columns.push({
+        key: "8",
+        name:"Projects",
+        fieldName: project,
+        minWidth: 150,
+        maxWidth: 200,
+        isResizable: true,
+        isRowHeader: true,
+        isPadded: true,
+      });
+
+      _columns.push({
+        key: "8",
+        name:"Skills",
+        fieldName: skill,
+        minWidth: 150,
+        maxWidth: 200,
+        isResizable: true,
+        isRowHeader: true,
+        isPadded: true,
+      });
+
+      _columns.push({
+        key: "8",
+        name:"Hobbies",
+        fieldName: hobbies,
+        minWidth: 150,
+        maxWidth: 200,
+        isResizable: true,
+        isRowHeader: true,
+        isPadded: true,
+      });
     }
   
     let _allItems = [];
@@ -292,7 +379,18 @@ const DetailsListBasicExample = (props) => {
       };
     
      
-    
+     
+      var _project = item[project];
+      var _skill = item[skill];
+      var _hobbies = item[hobbies];
+      var _dob = item[dob];
+      var _doj = item[doj];
+      dataObj[dob] = _dob === undefined ? "" : _dob;
+      dataObj[doj] = _doj === undefined ? "" : _doj;
+      dataObj[project] = _project === undefined ? "" : _project;
+      dataObj[skill] = _skill === undefined ? "" : _skill;
+      dataObj[hobbies] =_hobbies === undefined ? "" : _hobbies;
+     
   
       _allItems.push(dataObj);
     });
