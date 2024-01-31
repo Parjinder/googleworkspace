@@ -52,7 +52,64 @@ const EmployeeDetailModal = (props: any) => {
       GetDataForModal();
     }
   }, [props.user.id]);
+  function formatBDate1(d:any) {
+    if (d != "") {
+      // var numbers = d.match(/\d+/g);
+      // var date1 = new Date(numbers[2], numbers[1]-1, numbers[0]);
+      if (d === null || d === undefined) {
+      } else {
+        if (d.indexOf("T") > 0) {
+          var __date = new Date(d.split("T")[0].split('-'));
+          // var str =
+          //   (__date.getMonth() > 8
+          //     ? __date.getMonth() + 1
+          //     : "0" + (__date.getMonth() + 1)) +
+          //   "/" +
+          //   (__date.getDate() > 9 ? __date.getDate() : "0" + __date.getDate()) +
+          //   "/" +
+          //   __date.getFullYear();
+            const monthNames = [
+              "Jan",
+              "Feb",
+              "Mar",
+              "Apr",
+              "May",
+              "June",
+              "Jul",
+              "Aug",
+              "Sep",
+              "Oct",
+              "Nov",
+              "Dec",
+            ];
+            //let date = new Date(d);
+            var dd = __date.getDate();
+            var mm = monthNames[__date.getMonth()];
+            return (d = mm + " " + dd);
+        }
+       
+      }
+    }
+  }
+  function formatDate2(d:any) {
+    if (d.indexOf("T") > 0) {
+      var __date = new Date(d.split("T")[0].split('-'));
+     
+        //let date = new Date(d);
+        var dd = __date.getDate();
+        var mm = __date.getMonth() + 1;
+        var yyyy = __date.getFullYear();
+        return (d = mm + "/" + dd + "/" + yyyy);
+    }
+    else{
+    let date = new Date(d);
+    var dd = date.getDate();
+    var mm = date.getMonth() + 1;
+    var yyyy = date.getFullYear();
 
+    return (d = mm + "/" + dd + "/" + yyyy);
+    }
+  }
   const GetDataForModal = () => {
     var returnObject: any = null;
     var mappedcustomcol = JSON.parse(props.user.mappedfields);
@@ -123,8 +180,8 @@ const EmployeeDetailModal = (props: any) => {
       Projects: _project === undefined ? "" : _project,
       Skills: _skill === undefined ? "" : _skill,
       Hobbies: _hobbies === undefined ? "" : _hobbies,
-      DateofBirth: _dob === undefined ? "" : _dob,
-      DateofJoin: _doj === undefined ? "" : _doj,
+      DateofBirth: _dob === undefined ? "" :formatBDate1(_dob+"T"),
+      DateofJoin: _doj === undefined ? "" : formatDate2(_doj+"T"),
     };
     diffStyle = {
       backgroundImage: "url('" + props.user.image + "')",
@@ -341,7 +398,7 @@ const EmployeeDetailModal = (props: any) => {
                 </div>
 
                 <div className="labelSpanStylesTemp">
-                  <label>{"WorkPhone"}</label>
+                  <label>{"Work Phone"}</label>
 
                   <span className="clpbrdspan">
                     <a

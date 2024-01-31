@@ -627,6 +627,33 @@ const SelectSource = (props) => {
                         </span>
                       </a>
                     </div>
+
+                    <div id="departmentid">
+                      <SearchBox
+                        className="searchBoxStyles"
+                        styles={searchBoxStyles}
+                        placeholder={"Custom field"}
+                        onEscape={clearFilters}
+                        onClear={clearFilters}
+                        onChange={(newValue) =>
+                          // this.filterForDeptSearch(newValue)
+                          optimization(newValue?.target?.value, "cf")
+                        }
+                      />
+                      <a id="filterdept" style={{ display: "none" }}>
+                        <span
+                          className="filterIconsSearchStyle"
+                        >
+                          <Icon
+                            title={"Departments"}
+                            // onClick={() =>
+                            //   this.searchByDepttext()
+                            // }
+                            iconName="Search"
+                          ></Icon>
+                        </span>
+                      </a>
+                    </div>
                   </div>
                 </div>
                 <div className="iconsDiv">

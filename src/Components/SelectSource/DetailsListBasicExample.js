@@ -109,7 +109,64 @@ const ListStyles = {
 const DetailsListBasicExample = (props) => {
     //console.log(props);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    
+    function formatBDate1(d) {
+      if (d != "") {
+        // var numbers = d.match(/\d+/g);
+        // var date1 = new Date(numbers[2], numbers[1]-1, numbers[0]);
+        if (d === null || d === undefined) {
+        } else {
+          if (d.indexOf("T") > 0) {
+            var __date = new Date(d.split("T")[0].split('-'));
+            // var str =
+            //   (__date.getMonth() > 8
+            //     ? __date.getMonth() + 1
+            //     : "0" + (__date.getMonth() + 1)) +
+            //   "/" +
+            //   (__date.getDate() > 9 ? __date.getDate() : "0" + __date.getDate()) +
+            //   "/" +
+            //   __date.getFullYear();
+              const monthNames = [
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "May",
+                "June",
+                "Jul",
+                "Aug",
+                "Sep",
+                "Oct",
+                "Nov",
+                "Dec",
+              ];
+              //let date = new Date(d);
+              var dd = __date.getDate();
+              var mm = monthNames[__date.getMonth()];
+              return (d = mm + " " + dd);
+          }
+         
+        }
+      }
+    }
+    function formatDate2(d) {
+      if (d.indexOf("T") > 0) {
+        var __date = new Date(d.split("T")[0].split('-'));
+       
+          //let date = new Date(d);
+          var dd = __date.getDate();
+          var mm = __date.getMonth() + 1;
+          var yyyy = __date.getFullYear();
+          return (d = mm + "/" + dd + "/" + yyyy);
+      }
+      else{
+      let date = new Date(d);
+      var dd = date.getDate();
+      var mm = date.getMonth() + 1;
+      var yyyy = date.getFullYear();
+  
+      return (d = mm + "/" + dd + "/" + yyyy);
+      }
+    }
   
     const hideModal=()=> {
       setIsModalOpen(false);
@@ -385,8 +442,8 @@ const DetailsListBasicExample = (props) => {
       var _hobbies = item[hobbies];
       var _dob = item[dob];
       var _doj = item[doj];
-      dataObj[dob] = _dob === undefined ? "" : _dob;
-      dataObj[doj] = _doj === undefined ? "" : _doj;
+      dataObj[dob] = _dob === undefined ? "" : formatBDate1(_dob+"T");
+      dataObj[doj] = _doj === undefined ? "" : formatDate2(_doj+"T");
       dataObj[project] = _project === undefined ? "" : _project;
       dataObj[skill] = _skill === undefined ? "" : _skill;
       dataObj[hobbies] =_hobbies === undefined ? "" : _hobbies;
