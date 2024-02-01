@@ -2,5 +2,7 @@
     "appService.zipIgnorePattern": [
         "node_modules{,/**}",
         ".vscode{,/**}"
-    ]
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/90dc89b2-be81-42c0-a6ef-6bd1eea5472d/resourceGroups/HR365EmployeeDirectory_group/providers/Microsoft.Web/sites/ED365",
+    "appService.deploySubpath": "src"
 }

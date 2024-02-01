@@ -192,7 +192,7 @@ const DocumentCardBasicExample = (props) => {
                           color: "#363636",
                           textDecoration: "none",
                         }}
-                        // href={item.phoneLink}
+                         href={"tel:" +item.workphone}
                         target="_blank"
                       >
                         <Icon iconName="Phone"></Icon>

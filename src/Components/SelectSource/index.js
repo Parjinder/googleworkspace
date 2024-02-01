@@ -116,6 +116,64 @@ const SelectSource = (props) => {
 
     return staffList;
   }
+  // async function getAllUsersGrpMInOrg(userEmail) {
+  //   let page = "";
+  //   let pageToken = "";
+  //   let staffList = [];
+  //   //alert(allletter);
+  //   do {
+  //     page = await gapi.client.directory.members.list({
+  //       groupKey: userEmail,     
+  //       maxResults: 100,
+  //       pageToken: pageToken,
+  //     });
+
+  //     staffList = staffList.concat(page.result.members);
+
+  //     pageToken = page.nextPageToken;
+  //   } while (pageToken);
+
+  //   return staffList;
+  // }
+  
+  async function getAllUserManInOrg(userEmail) {
+    let page = "";
+   
+    let staffList = [];
+    //alert(allletter);
+   
+      page = await gapi.client.directory.users.list({
+        userKey: userEmail,  
+        projection: "full",
+        orderBy: "givenName",
+       
+      });
+
+      staffList = staffList.concat(page.result.users);
+
+    
+
+    return staffList;
+  }
+  // async function getAllUsersGrpInOrg(userEmail) {
+  //   let page = "";
+  //   let pageToken = "";
+  //   let staffList = [];
+  //   //alert(allletter);
+  //   do {
+  //     page = await gapi.client.directory.groups.list({
+  //       userKey: userEmail,     
+  //       maxResults: 100,
+  //       pageToken: pageToken,
+  //     });
+
+  //     staffList = staffList.concat(page.result.groups);
+
+  //     pageToken = page.nextPageToken;
+  //   } while (pageToken);
+
+  //   return staffList;
+  // }
   const filterByLetter = (Letter) => {
     //allletter===Letter;
     
@@ -195,6 +253,17 @@ const SelectSource = (props) => {
       return "";
     }
   }
+  function getUserOrgADDItem(user) {
+    if (user.hasOwnProperty("addresses")) {
+      const primaryOrg = user.addresses.filter(
+        (x) => x.type === "work"
+      )[0].formatted;
+
+      return primaryOrg;
+    } else {
+      return "";
+    }
+  }
   function getUserOrgLOCItem(user) {
     if (user.hasOwnProperty("locations")) {
       var bid = user.locations[0].hasOwnProperty("buildingId")
@@ -243,7 +312,38 @@ const SelectSource = (props) => {
         setUserArray([]);
       } else {
         let staffMember = data.map((user) => {
-          var arr123 = {};
+          var arr123 = {};var man={};
+          var mgremail=getUserOrgMGItem(user);
+          var dataofmang=data.filter((person) => person.primaryEmail == mgremail);
+          if(dataofmang.length>0)
+          {
+            console.log(dataofmang);
+            man = {
+              firstName: dataofmang[0].name.givenName,
+            lastName: dataofmang[0].name.familyName,
+            name: dataofmang[0].name.fullName,
+            email: dataofmang[0].primaryEmail,
+            id:dataofmang[0].id,
+            job: dataofmang[0].hasOwnProperty("organizations")
+              ? dataofmang[0].organizations[0].hasOwnProperty("title")
+                ? dataofmang[0].organizations[0].title
+                : ""
+              : "",
+            //initials: initials,
+            department: dataofmang[0].hasOwnProperty("organizations")
+              ? dataofmang[0].organizations[0].hasOwnProperty("department")
+                ? dataofmang[0].organizations[0].department
+                : ""
+              : "",             
+              image: dataofmang[0].hasOwnProperty("thumbnailPhotoUrl")
+              ? dataofmang[0].thumbnailPhotoUrl
+              : DefaultImage,
+            };
+          }
+          // getAllUserManInOrg(user.primaryEmail).then((data) => {
+          //   console.log(data);
+
+          // })
           if (user.hasOwnProperty("customSchemas")) {
             const cfield = user.customSchemas;
 
@@ -275,6 +375,7 @@ const SelectSource = (props) => {
               initials += names[names.length - 1].substring(0, 1).toUpperCase();
             }
           }
+         
           return {
             ...arr123,
             firstName: user.name.givenName,
@@ -302,13 +403,37 @@ const SelectSource = (props) => {
             mobile: getUserOrgMBItem(user),
             manager: getUserOrgMGItem(user),
             employeeid: getUserOrgEIDItem(user),
+            costcenter:user.hasOwnProperty("organizations")
+            ? user.organizations[0].hasOwnProperty("costCenter")
+              ? user.organizations[0].costCenter
+              : ""
+            : "",
+            buildingid:user.hasOwnProperty("locations")
+            ? user.locations[0].hasOwnProperty("buildingId")
+              ? user.locations[0].buildingId
+              : ""
+            : "",
+            floorname:user.hasOwnProperty("locations")
+            ? user.locations[0].hasOwnProperty("floorName")
+              ? user.locations[0].floorName
+              : ""
+            : "",
+            floorsection:user.hasOwnProperty("locations")
+            ? user.locations[0].hasOwnProperty("floorSection")
+              ? user.locations[0].floorSection
+              : ""
+            : "",
             location: getUserOrgLOCItem(user),
+            address:getUserOrgADDItem(user),
             image: user.hasOwnProperty("thumbnailPhotoUrl")
               ? user.thumbnailPhotoUrl
               : DefaultImage,
-              mappedfields:mappedfields
+              mappedfields:mappedfields,
+              managerprofilecard:man
           };
         });
+        
+       
         //console.log(staffMember);
         setUserArray(staffMember);
       }
@@ -447,6 +572,7 @@ const SelectSource = (props) => {
   };
   const optimization = (value, mode) => {
     gapi.client.load("admin", "directory_v1", () => {});
+    
     getAllUsersInOrg1(value, mode).then((data) => {
       console.log(data);
       var mappedfields =
@@ -515,7 +641,29 @@ const SelectSource = (props) => {
             mobile: getUserOrgMBItem(user),
             manager: getUserOrgMGItem(user),
             employeeid: getUserOrgEIDItem(user),
+            employeeid: getUserOrgEIDItem(user),
+            costcenter:user.hasOwnProperty("organizations")
+            ? user.organizations[0].hasOwnProperty("costCenter")
+              ? user.organizations[0].costCenter
+              : ""
+            : "",
+            buildingid:user.hasOwnProperty("locations")
+            ? user.locations[0].hasOwnProperty("buildingId")
+              ? user.locations[0].buildingId
+              : ""
+            : "",
+            floorname:user.hasOwnProperty("locations")
+            ? user.locations[0].hasOwnProperty("floorName")
+              ? user.locations[0].floorName
+              : ""
+            : "",
+            floorsection:user.hasOwnProperty("locations")
+            ? user.locations[0].hasOwnProperty("floorSection")
+              ? user.locations[0].floorSection
+              : ""
+            : "",
             location: getUserOrgLOCItem(user),
+            address:getUserOrgADDItem(user),
             image: user.hasOwnProperty("thumbnailPhotoUrl")
               ? user.thumbnailPhotoUrl
               : DefaultImage,

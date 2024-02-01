@@ -24,11 +24,47 @@ const style = () => css`
     display: flex;
    
   }
+  .empManagerStyle {
+    width: 100%;
+    margin-top: 10px;
+    // border-top: 1px solid #cdcdcd;
+  }
+  .empManagerStyle h4 {
+    font-size: 16px;
+    padding-bottom: 1%;
+    border-bottom: 1px solid #ddd;
+    margin: 0px 0px 8px 0px;
+    color: #333;
+  }
   .labelSpanStylesTemp {
     margin-bottom: 1%;
     width: 31%;
     float: left;
     margin-right: 2%;
+  }
+  .managerNameDet:nth-child(2) {
+    font-size: 11px !important;
+  }
+  .empManagerLogonew {
+    margin-right: -4%;
+    max-width: 50px;
+    float: left;
+  }
+  .managerNameDet:first-child {
+    font-size: 13px;
+    font-weight: 500;
+    padding-bottom: 3px;
+    display: flex;
+    align-items: center;
+    height: 16px;
+  }
+  .managerNameDet {
+    font-size: 11px;
+    line-height: 14px;
+    font-weight: 400;
+    padding-bottom: 1px;
+    color: #333;
+    text-align: left;
   }
   .labelSpanStylesTemp label {
     width: 100%;

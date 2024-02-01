@@ -36,6 +36,7 @@ import {
 } from "@fluentui/react/lib/Persona";
 import { createTheme } from "office-ui-fabric-react";
 import DefaultImage from "../assets/images/DefaultImg1.png";
+import { gapi } from "gapi-script";
 import { style } from "./styles";
 import styled from "styled-components";
 
@@ -43,6 +44,7 @@ const NewDocumentWrapper = styled.div`
   ${style}
 `;
 var diffStyle: any;
+var diffStyleMan:any;
 const EmployeeDetailModal = (props: any) => {
   const [user, setUser] = useState<any>(null);
   const [showManager, setshowManager] = useState(true);
@@ -110,6 +112,45 @@ const EmployeeDetailModal = (props: any) => {
     return (d = mm + "/" + dd + "/" + yyyy);
     }
   }
+  async function getAllUsersGrpMInOrg(userEmail:any) {
+    let page:any = "";
+    let pageToken = "";
+    let staffList:any = [];
+    //alert(allletter);
+    do {
+      page = await gapi.client.directory.members.list({
+        groupKey: userEmail,     
+        maxResults: 100,
+        pageToken: pageToken,
+      });
+
+      staffList = staffList.concat(page.result.members);
+
+      pageToken = page.nextPageToken;
+    } while (pageToken);
+
+    return staffList;
+  }
+  
+  async function getAllUsersGrpInOrg(userEmail:any) {
+    let page:any = "";
+    let pageToken = "";
+    let staffList:any = [];
+    //alert(allletter);
+    do {
+      page = await gapi.client.directory.groups.list({
+        userKey: userEmail,     
+        maxResults: 100,
+        pageToken: pageToken,
+      });
+
+      staffList = staffList.concat(page.result.groups);
+
+      pageToken = page.nextPageToken;
+    } while (pageToken);
+
+    return staffList;
+  }
   const GetDataForModal = () => {
     var returnObject: any = null;
     var mappedcustomcol = JSON.parse(props.user.mappedfields);
@@ -156,6 +197,23 @@ const EmployeeDetailModal = (props: any) => {
             (item: any) => item.ExistingList == "Date of Join"
           )[0].ExternalList
         : "Date of Join";
+        var memberof=[];
+        getAllUsersGrpInOrg(props.user.email).then((data:any) => {
+             
+          //console.log(data);
+          if (data.length) {
+           
+            data.forEach((group:any) => {
+
+              getAllUsersGrpMInOrg(group.email).then((data1) => {
+
+                data1.filter((person:any) => person.email == props.user.email);
+                console.log(data1)
+              });
+             
+            });
+          } 
+        })
     var _aboutme = props.user[aboutme];
     var _school = props.user[school];
     var _project = props.user[project];
@@ -182,6 +240,13 @@ const EmployeeDetailModal = (props: any) => {
       Hobbies: _hobbies === undefined ? "" : _hobbies,
       DateofBirth: _dob === undefined ? "" :formatBDate1(_dob+"T"),
       DateofJoin: _doj === undefined ? "" : formatDate2(_doj+"T"),
+      EmployeeId:props.user.employeeid,
+      BuildingId:props.user.buildingid,
+      FloorName:props.user.floorname,
+      FloorSection:props.user.floorsection,
+      Address:props.user.address,
+      CostCenter:props.user.costcenter,
+      managerprofilecard:props.user.managerprofilecard
     };
     diffStyle = {
       backgroundImage: "url('" + props.user.image + "')",
@@ -195,7 +260,20 @@ const EmployeeDetailModal = (props: any) => {
       backgroundPosition: "center",
       backgroundSize: "cover",
     };
+    diffStyleMan = {
+      backgroundImage: "url('" + props.user.managerprofilecard.image + "')",
+      backgroundRepeat: "no-repeat",
+      width: "56px",
+      height: "56px",
+      position: "absolute",
+      top: "0px",
+      borderRadius: "50%",
+      zIndex: 1,
+      backgroundPosition: "center",
+      backgroundSize: "cover",
+    };
     setUser(returnObject);
+    setshowManager(true);
     //setshowAD(true);
     return returnObject;
   };
@@ -282,7 +360,7 @@ const EmployeeDetailModal = (props: any) => {
                     <a
                       //style={{ paddingLeft: "0px" }}
                       className="empDetailIcon"
-                      //href={user.chatLink}
+                      href={"mailto:"+user.email}
                       title={user.email}
                       target="_blank"
                     >
@@ -294,7 +372,7 @@ const EmployeeDetailModal = (props: any) => {
                   <div>
                     <a
                       className="empDetailIcon"
-                      //href={user._mailboxlink}
+                     href={"mailto:"+user.email}
                       title={user.email}
                       target="_blank"
                     >
@@ -306,7 +384,7 @@ const EmployeeDetailModal = (props: any) => {
                   <div>
                     <a
                       className="empDetailIcon"
-                      //href={user.phoneLink}
+                      href={"tel:"+user.wphone}
                       title={user.wphone}
                       target="_blank"
                     >
@@ -316,7 +394,7 @@ const EmployeeDetailModal = (props: any) => {
                   </div>
                 )}
 
-                <div>
+                {/* <div>
                   <a
                     className="empDetailIcon"
                     //href={user.videoLink}
@@ -325,7 +403,7 @@ const EmployeeDetailModal = (props: any) => {
                   >
                     <Icon iconName="Video"></Icon>
                   </a>
-                </div>
+                </div> */}
 
                 {/* <Panel
                     type={PanelType.custom}
@@ -387,7 +465,7 @@ const EmployeeDetailModal = (props: any) => {
 
                   <span className="clpbrdspan">
                     <a
-                      //href={user._mailboxlink}
+                       href={"mailto:"+user.email}
                       title={user.email}
                       target="_blank"
                     >
@@ -402,9 +480,9 @@ const EmployeeDetailModal = (props: any) => {
 
                   <span className="clpbrdspan">
                     <a
-                    // href={user.phoneLink}
-                    // title={user.wphone}
-                    // target="_blank"
+                      href={"tel:"+user.wphone}
+                    title={user.wphone}
+                    target="_blank"
                     >
                       {user.wphone}
                     </a>
@@ -428,112 +506,95 @@ const EmployeeDetailModal = (props: any) => {
                 </div>
 
                 <div className="labelSpanStyles">
-                  <label>{"Birthday"}</label>
+                  <label>{"Employee ID"}</label>
 
-                  <span>{user.DateofBirth}</span>
+                  <span>{user.EmployeeId}</span>
                 </div>
 
                 <div className="labelSpanStyles">
-                  <label>{"Date of Joining"}</label>
+                  <label>{"Cost center"}</label>
 
-                  <span>{user.DateofJoin}</span>
+                  <span>{user.CostCenter}</span>
                 </div>
               </div>
               <div>
                 <div className="personallabelSpanStyles">
-                  <label>{"About Me"}</label>
-                  <span>{user.AboutMe}</span>
+                  <label>{"Building id"}</label>
+                  <span>{user.BuildingId}</span>
                 </div>
 
                 <div className="personallabelSpanStyles">
-                  <label>{"Schools"}</label>
-                  <span>{user.School ? user.School : ""}</span>
+                  <label>{"Floor name"}</label>
+                  <span>{user.FloorName ? user.FloorName : ""}</span>
                 </div>
 
                 {/* {console.log(user.projects)} */}
 
                 <div className="personallabelSpanStyles">
-                  <label>{"Projects"}</label>
-                  <span>{user.Projects ? user.Projects : ""}</span>
+                  <label>{"Floor section"}</label>
+                  <span>{user.FloorSection ? user.FloorSection : ""}</span>
                 </div>
 
                 <div className="personallabelSpanStyles">
-                  <label>{"Skills"}</label>
-                  <span>{user.Skills ? user.Skills : ""}</span>
+                  <label>{"Address"}</label>
+                  <span>{user.Address ? user.Address : ""}</span>
                 </div>
 
                 <div className="personallabelSpanStyles">
-                  <label>{"Hobbies"}</label>
-                  <span>{user.Hobbies ? user.Hobbies : ""}</span>
+                  <label>{"MemberOf"}</label>
+                  {/* <span>{user.Hobbies ? user.Hobbies : ""}</span> */}
                 </div>
 
-                {/* {props.user.nonm365 || props.user.mobnonm365 ? (
-                  <Stack className={styles.personallabelSpanStyles}>
-                    <label>
-                      {props.langcode.Pronouns
-                        ? props.langcode.Pronouns
-                        : "Pronouns"}
-                    </label>
-                    <span>{user.pronouns ? user.pronouns : ""}</span>
-                  </Stack>
-                ) : (
-                  ""
-                )} */}
-
-                {/* {
-              <Stack className={styles.personallabelSpanStyles}>
-              <label>Industry experience</label>
-              <span>{user.customproperty ? user.customproperty : ""}</span>
-            </Stack>
-            } */}
-
-                {/* {!props.user.nm365customcolumn ||
-                props.user.nm365customcolumn == "" ||
-                props.user.nm365customcolumn == "-"
-                  ? ""
-                  : NM365Array.map((item, key) => {
-                      return (
-                        <Stack
-                          className={styles.personallabelSpanStyles}
-                          style={{ paddingTop: "5px" }}
-                        >
-                          {item.split(":")[3] == "true" ? (
-                            ""
-                          ) : (
-                            <>
-                              <label style={{ fontWeight: 500 }}>
-                                {item.split(":")[0]}
-                              </label>
-                              <span key={key}>{item.split(":")[1]}</span>
-                            </>
-                          )}
-                        </Stack>
-                      );
-                    })} */}
-                {/* {!props.user.customcolumn ||
-                props.user.customcolumn == "" ||
-                props.user.customcolumn == "-"
-                  ? ""
-                  : props.user.customfld.split(";").map((item, key) => {
-                      return (
-                        <Stack className={styles.personallabelSpanStyles}>
-                          {item.split(":")[4] != "undefined" ? (
-                            item.split(":")[3] == "true" ? (
-                              ""
-                            ) : (item.split(":")[1] == " "?"":
-                              <>
-                                <label style={{ fontWeight: 500 }}>
-                                  {item.split(":")[0]}
-                                </label>
-                                <span key={key}>{item.split(":")[1]?.replace(/#@#/g, ";")}</span>
-                              </>
-                            )
-                          ) : (
-                            ""
-                          )}
-                        </Stack>
-                      );
-                    })} */}
+                {showManager && (
+                <div className="empManagerStyle">
+                        <h4>
+                          {"Manager"}
+                        </h4>
+                       
+                          <div>
+                            <div
+                              style={{ cursor: "pointer" }}
+                              // onClick={() =>
+                              //   GetDataForModal(props.user.managerprofilecard.email)
+                              // }
+                              className="empManagerLogo"
+                            >
+                              
+                                <div>
+                                  <Persona
+                                    imageUrl={
+                                      props.user.managerprofilecard.image
+                                        
+                                    }
+                                    //imageInitials={user.manager.initials}
+                                    //imageAlt={user.manager.initials}
+                                   // presence={manpresence}
+                                    //presenceTitle={manpresencestatus}
+                                    size={PersonaSize.size56}
+                                  />
+                                </div>
+                             
+                            </div>
+                            <div>
+                              <div className="managerNameDet">
+                                <span className="clpbrdspan">
+                                  {props.user.managerprofilecard.name}
+                                  {/* <Icon className={styles.clpbrdsicon} onClick={() =>  navigator.clipboard.writeText(user.manager.name)} iconName="Copy"></Icon> */}
+                                
+                                </span>
+                              </div>
+                              <div className="managerNameDet">
+                                {props.user.managerprofilecard.department}
+                              </div>
+                              <div className="managerNameDet">
+                                {props.user.managerprofilecard.job}
+                              </div>
+                            </div>
+                          </div>
+                        
+                       
+                      </div>)}
+               
               </div>
             </div>
           </div>
